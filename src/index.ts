@@ -48,22 +48,24 @@ type Unescape<S extends string> = UnescapeInternal<S, "">;
 type UnescapeInternal<
   S extends string,
   R extends string
-> = S extends `${infer A}\\\\${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\\`>
-  : S extends `${infer A}\\"${infer B}`
-  ? UnescapeInternal<B, `${R}${A}"`>
-  : S extends `${infer A}\\/${infer B}`
-  ? UnescapeInternal<B, `${R}${A}/`>
-  : S extends `${infer A}\\b${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\b`>
-  : S extends `${infer A}\\t${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\t`>
-  : S extends `${infer A}\\n${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\n`>
-  : S extends `${infer A}\\f${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\f`>
-  : S extends `${infer A}\\r${infer B}`
-  ? UnescapeInternal<B, `${R}${A}\r`>
+> = S extends `${infer A}\\${infer B}`
+  ? B extends `\\${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\\`>
+    : B extends `"${infer C}`
+    ? UnescapeInternal<C, `${R}${A}"`>
+    : B extends `/${infer C}`
+    ? UnescapeInternal<C, `${R}${A}/`>
+    : B extends `b${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\b`>
+    : B extends `t${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\t`>
+    : B extends `n${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\n`>
+    : B extends `f${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\f`>
+    : B extends `r${infer C}`
+    ? UnescapeInternal<C, `${R}${A}\r`>
+    : never
   : `${R}${S}`;
 
 type ExpectObject<S extends string> = TrimStart<S> extends `{${infer I}`
